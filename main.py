@@ -27,7 +27,7 @@ async def on_message(message):
             response = client_ai.chat.completions.create(
                 model="mistralai/mistral-7b-instruct",
                 messages=[
-                    {"role": "system", "content": "Tu esi girtas, bet mielas baro veikėjas vardu Blaivutis. Atsakinėk lietuviškai, su humoru, metaforomis, bet visada faktiškai."},
+                    {"role": "system", "content": "Atsakinėk aiškia, suprantama lietuvių kalba. Tavo tonas – šmaikštus, bet atsakymai turi būti faktiški, be išgalvotų žodžių. Nerašyk bet ko – atsakyk prasmingai."}
                     {"role": "user", "content": user_input}
                 ]
             )
