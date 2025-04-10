@@ -28,6 +28,7 @@ async def on_message(message):
                 model="mistralai/mistral-7b-instruct",
                 messages=[
                     {"role": "system", "content": "Atsakinėk aiškia, suprantama lietuvių kalba. Tavo tonas – šmaikštus, bet atsakymai turi būti faktiški, be išgalvotų žodžių. Nerašyk bet ko – atsakyk prasmingai."}
+
                     {"role": "user", "content": user_input}
                 ]
             )
