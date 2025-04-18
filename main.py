@@ -1,12 +1,12 @@
 import discord
 import os
-from openai import OpenAI
+from openai import AsyncOpenAI
 
 intents = discord.Intents.default()
 intents.message_content = True
 client = discord.Client(intents=intents)
 
-client_ai = OpenAI(
+client_ai = AsyncOpenAI(
     api_key=os.getenv("OPENROUTER_API_KEY"),
     base_url="https://openrouter.ai/api/v1"
 )
@@ -24,16 +24,24 @@ async def on_message(message):
         user_input = message.content.replace(f'<@{client.user.id}>', '').strip()
 
         try:
-            response = client_ai.chat.completions.create(
-                model="mistralai/mistral-7b-instruct",
-                messages=[
-                    {"role": "system", "content": """Atsakinėk aiškia, suprantama lietuvių kalba.
+            async with message.channel.typing():
+                response = await client_ai.chat.completions.create(
+                    model="mistralai/mistral-7b-instruct",
+                    messages=[
+                        {
+                            "role": "system",
+                            "content": """Atsakinėk aiškia, suprantama lietuvių kalba.
 Tavo tonas – šmaikštus, bet atsakymai turi būti faktiški,
-be išgalvotų žodžių. Nerašyk bet ko – atsakyk prasmingai."""},
-                    {"role": "user", "content": user_input}
-                ]
-            )
-            await message.channel.send(response.choices[0].message.content)
+be išgalvotų žodžių. Nerašyk bet ko – atsakyk prasmingai."""
+                        },
+                        {
+                            "role": "user",
+                            "content": user_input
+                        }
+                    ]
+                )
+                await message.channel.send(response.choices[0].message.content)
+
         except Exception as e:
             await message.channel.send(f"Blaivutis užsikniso: {e}")
 
